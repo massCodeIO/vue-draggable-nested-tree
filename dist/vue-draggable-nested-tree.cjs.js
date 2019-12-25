@@ -1,5 +1,5 @@
 /*!
- * vue-draggable-nested-tree v2.2.18
+ * vue-draggable-nested-tree v2.2.19
  * (c) 2018-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -22,6 +22,9 @@ require('core-js/modules/es6.array.find');
 var vf = require('vue-functions');
 require('core-js/modules/es6.regexp.replace');
 var draggableHelper = _interopDefault(require('draggable-helper'));
+require('core-js/modules/es6.array.iterator');
+require('core-js/modules/es6.promise');
+require('core-js/modules/es7.promise.finally');
 
 var keys$1 = keys;
 
@@ -236,7 +239,6 @@ var script$1 = {
       delete t._id;
       delete t.parent;
       delete t.children;
-      delete t.open;
       delete t.active;
       delete t.style;
       delete t.class;

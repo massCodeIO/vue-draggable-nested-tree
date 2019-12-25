@@ -77,7 +77,6 @@ export default {
       delete t._id
       delete t.parent
       delete t.children
-      delete t.open
       delete t.active
       delete t.style
       delete t.class

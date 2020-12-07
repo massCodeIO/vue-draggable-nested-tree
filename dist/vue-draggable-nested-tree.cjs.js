@@ -1,5 +1,5 @@
 /*!
- * vue-draggable-nested-tree v2.2.19
+ * vue-draggable-nested-tree v2.2.20
  * (c) 2018-present phphe <phphe@outlook.com>
  * Released under the MIT License.
  */
@@ -9,26 +9,22 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var keys = _interopDefault(require('core-js/library/fn/object/keys'));
-var assign = _interopDefault(require('core-js/library/fn/object/assign'));
 var th = require('tree-helper');
 require('core-js/modules/web.dom.iterable');
 require('core-js/modules/es6.number.constructor');
 var hp = require('helper-js');
-var defineProperty = _interopDefault(require('core-js/library/fn/object/define-property'));
+var _Object$defineProperty = _interopDefault(require('@babel/runtime-corejs2/core-js/object/define-property'));
 require('core-js/modules/es6.function.name');
-var getIterator = _interopDefault(require('core-js/library/fn/get-iterator'));
+require('core-js/modules/es7.symbol.async-iterator');
+require('core-js/modules/es6.symbol');
+require('core-js/modules/es6.string.iterator');
+require('core-js/modules/es6.array.from');
+require('core-js/modules/es6.regexp.to-string');
 require('core-js/modules/es6.array.find');
+require('core-js/modules/es6.object.keys');
 var vf = require('vue-functions');
 require('core-js/modules/es6.regexp.replace');
 var draggableHelper = _interopDefault(require('draggable-helper'));
-require('core-js/modules/es6.array.iterator');
-require('core-js/modules/es6.promise');
-require('core-js/modules/es7.promise.finally');
-
-var keys$1 = keys;
-
-var assign$1 = assign;
 
 //
 var script = {
@@ -88,11 +84,96 @@ var script = {
 
 };
 
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  var options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  var hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function hook(context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function () {
+      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      var originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+
+var normalizeComponent_1 = normalizeComponent;
+
 /* script */
-            const __vue_script__ = script;
-            
+const __vue_script__ = script;
+
 /* template */
-var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"tree-node",class:[_vm.data.active ? _vm.store.activatedClass : '', _vm.data.open ? _vm.store.openedClass : '', _vm.data.class],style:(_vm.data.style),attrs:{"id":_vm.data._id}},[(!_vm.isRoot)?_vm._t("node-inner-back",[_c('div',{staticClass:"tree-node-inner-back",class:[_vm.data.innerBackClass],style:([_vm.innerBackStyle, _vm.data.innerBackStyle])},[_c('div',{staticClass:"tree-node-inner",class:[_vm.data.innerClass],style:([_vm.data.innerStyle])},[_vm._t("default",null,{data:_vm.data,store:_vm.store,vm:_vm.vm})],2)])],{styleObj:_vm.innerBackStyle,data:_vm.data,store:_vm.store,vm:_vm.vm}):_vm._e(),_c('transition',{attrs:{"name":_vm.store.childrenTransitionName}},[(_vm.childrenVisible)?_c('div',{staticClass:"tree-node-children"},_vm._l((_vm.data.children),function(child){return _c('TreeNode',{key:child._id,attrs:{"data":child,"store":_vm.store,"level":_vm.childrenLevel},scopedSlots:_vm._u([{key:"default",fn:function(props){return [_vm._t("default",null,{data:props.data,store:props.store,vm:props.vm})]}},{key:"node-inner-back",fn:function(props){return (_vm.store.customInnerBack)?[_vm._t("node-inner-back",null,{styleObj:props.styleObj,data:props.data,store:props.store,vm:props.vm})]:undefined}}])})}),1):_vm._e()])],2)};
+var __vue_render__ = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"tree-node",class:[_vm.data.active ? _vm.store.activatedClass : '', _vm.data.open ? _vm.store.openedClass : '', _vm.data.class],style:(_vm.data.style),attrs:{"id":_vm.data._id}},[(!_vm.isRoot)?_vm._t("node-inner-back",[_c('div',{staticClass:"tree-node-inner-back",class:[_vm.data.innerBackClass],style:([_vm.innerBackStyle, _vm.data.innerBackStyle])},[_c('div',{staticClass:"tree-node-inner",class:[_vm.data.innerClass],style:([_vm.data.innerStyle])},[_vm._t("default",null,{"data":_vm.data,"store":_vm.store,"vm":_vm.vm})],2)])],{"styleObj":_vm.innerBackStyle,"data":_vm.data,"store":_vm.store,"vm":_vm.vm}):_vm._e(),_c('transition',{attrs:{"name":_vm.store.childrenTransitionName}},[(_vm.childrenVisible)?_c('div',{staticClass:"tree-node-children"},_vm._l((_vm.data.children),function(child){return _c('TreeNode',{key:child._id,attrs:{"data":child,"store":_vm.store,"level":_vm.childrenLevel},scopedSlots:_vm._u([{key:"default",fn:function(props){return [_vm._t("default",null,{"data":props.data,"store":props.store,"vm":props.vm})]}},{key:"node-inner-back",fn:function(props){return (_vm.store.customInnerBack)?[_vm._t("node-inner-back",null,{"styleObj":props.styleObj,"data":props.data,"store":props.store,"vm":props.vm})]:undefined}}],null,true)})}),1):_vm._e()])],2)};
 var __vue_staticRenderFns__ = [];
 
   /* style */
@@ -103,36 +184,13 @@ var __vue_staticRenderFns__ = [];
   const __vue_module_identifier__ = undefined;
   /* functional template */
   const __vue_is_functional_template__ = false;
-  /* component normalizer */
-  function __vue_normalize__(
-    template, style, script$$1,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script$$1 === 'function' ? script$$1.options : script$$1) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "TreeNode.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var TreeNode = __vue_normalize__(
+  var TreeNode = normalizeComponent_1(
     { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
     __vue_inject_styles__,
     __vue_script__,
@@ -234,9 +292,8 @@ var script$1 = {
     pure: function pure(node, withChildren, after) {
       var _this2 = this;
 
-      var t = assign$1({}, node);
+      var t = Object.assign({}, node); // delete t._id
 
-      delete t._id;
       delete t.parent;
       delete t.children;
       delete t.active;
@@ -245,17 +302,11 @@ var script$1 = {
       delete t.innerStyle;
       delete t.innerClass;
       delete t.innerBackStyle;
-      delete t.innerBackClass;
-
-      var _arr = keys$1(t);
-
-      for (var _i = 0; _i < _arr.length; _i++) {
-        var key = _arr[_i];
-
-        if (key[0] === '_') {
-          delete t[key];
-        }
-      }
+      delete t.innerBackClass; // for (const key of Object.keys(t)) {
+      //   if (key[0] === '_') {
+      //     delete t[key]
+      //   }
+      // }
 
       if (withChildren && node.children) {
         t.children = node.children.slice();
@@ -352,10 +403,10 @@ var script$1 = {
 };
 
 /* script */
-            const __vue_script__$1 = script$1;
-            
+const __vue_script__$1 = script$1;
+
 /* template */
-var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"he-tree tree"},[_c('TreeNode',{attrs:{"data":_vm.rootData,"store":_vm.store},scopedSlots:_vm._u([{key:"default",fn:function(props){return [_vm._t("default",null,{data:props.data,store:_vm.store,vm:props.vm})]}},{key:"node-inner-back",fn:function(props){return (_vm.customInnerBack)?[_vm._t("node-inner-back",null,{styleObj:props.styleObj,data:props.data,store:props.store,vm:props.vm})]:undefined}}])})],1)};
+var __vue_render__$1 = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"he-tree tree"},[_c('TreeNode',{attrs:{"data":_vm.rootData,"store":_vm.store},scopedSlots:_vm._u([{key:"default",fn:function(props){return [_vm._t("default",null,{"data":props.data,"store":_vm.store,"vm":props.vm})]}},{key:"node-inner-back",fn:function(props){return (_vm.customInnerBack)?[_vm._t("node-inner-back",null,{"styleObj":props.styleObj,"data":props.data,"store":props.store,"vm":props.vm})]:undefined}}],null,true)})],1)};
 var __vue_staticRenderFns__$1 = [];
 
   /* style */
@@ -366,36 +417,13 @@ var __vue_staticRenderFns__$1 = [];
   const __vue_module_identifier__$1 = undefined;
   /* functional template */
   const __vue_is_functional_template__$1 = false;
-  /* component normalizer */
-  function __vue_normalize__$1(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "Tree.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var Tree = __vue_normalize__$1(
+  var Tree = normalizeComponent_1(
     { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
     __vue_inject_styles__$1,
     __vue_script__$1,
@@ -405,8 +433,6 @@ var __vue_staticRenderFns__$1 = [];
     undefined,
     undefined
   );
-
-var defineProperty$1 = defineProperty;
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -421,7 +447,7 @@ function _defineProperties(target, props) {
     descriptor.configurable = true;
     if ("value" in descriptor) descriptor.writable = true;
 
-    defineProperty$1(target, descriptor.key, descriptor);
+    _Object$defineProperty(target, descriptor.key, descriptor);
   }
 }
 
@@ -433,7 +459,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 
 function _defineProperty(obj, key, value) {
   if (key in obj) {
-    defineProperty$1(obj, key, {
+    _Object$defineProperty(obj, key, {
       value: value,
       enumerable: true,
       configurable: true,
@@ -446,9 +472,7 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-var Cache =
-/*#__PURE__*/
-function () {
+var Cache = /*#__PURE__*/function () {
   function Cache() {
     _classCallCheck(this, Cache);
 
@@ -488,7 +512,7 @@ function () {
 }();
 function attachCache(obj, cache, toCache) {
   var _loop = function _loop(key) {
-    defineProperty$1(obj, key, {
+    Object.defineProperty(obj, key, {
       get: function get() {
         var _this = this;
 
@@ -504,8 +528,11 @@ function attachCache(obj, cache, toCache) {
   }
 }
 
-var getIterator$1 = getIterator;
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 // from https://gist.github.com/iddan/54d5d9e58311b0495a91bf06de661380
 
 if (!document.elementsFromPoint) {
@@ -537,12 +564,12 @@ function getTreeByPoint(x, y, trees) {
   var treeEl;
   var nodeEl;
   var betweenEls = [];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+
+  var _iterator = _createForOfIteratorHelper(els),
+      _step;
 
   try {
-    for (var _iterator = getIterator$1(els), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var _el = _step.value;
 
       if (!nodeEl) {
@@ -560,18 +587,9 @@ function getTreeByPoint(x, y, trees) {
       }
     }
   } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
+    _iterator.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
+    _iterator.f();
   }
 
   if (treeEl) {
@@ -580,13 +598,22 @@ function getTreeByPoint(x, y, trees) {
 
     if (!isParent(nodeEl, treeEl)) {
       // cross tree
-      for (var _i = 0; _i < betweenEls.length; _i++) {
-        var el = betweenEls[_i];
+      var _iterator2 = _createForOfIteratorHelper(betweenEls),
+          _step2;
 
-        if (!isParent(el, treeEl)) {
-          covered = true;
-          break;
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var el = _step2.value;
+
+          if (!isParent(el, treeEl)) {
+            covered = true;
+            break;
+          }
         }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
       }
     } //
 
@@ -829,14 +856,11 @@ var rules = {
   // 当前位置在另一节点innner indent位置右边
   'at indent right': function atIndentRight(info) {
     return info.offset.x > info.tiOffset.x + info.currentTree.indent;
-  } // convert rule output to Boolean
-
-};
-
-var _arr = keys$1(rules);
+  }
+}; // convert rule output to Boolean
 
 var _loop = function _loop() {
-  var key = _arr[_i2];
+  var key = _Object$keys[_i2];
   var old = rules[key];
 
   rules[key] = function () {
@@ -844,7 +868,7 @@ var _loop = function _loop() {
   };
 };
 
-for (var _i2 = 0; _i2 < _arr.length; _i2++) {
+for (var _i2 = 0, _Object$keys = Object.keys(rules); _i2 < _Object$keys.length; _i2++) {
   _loop();
 }
 
@@ -866,9 +890,9 @@ function autoMoveDragPlaceHolder(draggableHelperInfo) {
     draggableHelperData: {
       opt: draggableHelperInfo.options,
       store: dhStore
-    } //
+    }
+  }; //
 
-  };
   attachCache(info, new Cache(), {
     // dragging node coordinate
     // 拖动中的节点相关坐标
@@ -1357,9 +1381,9 @@ var script$2 = {
             var siblings = _this.data.parent.children;
             _this.startPosition = {
               siblings: siblings,
-              index: siblings.indexOf(_this.data) //
+              index: siblings.indexOf(_this.data)
+            }; //
 
-            };
             dplh.innerStyle.height = store.el.offsetHeight + 'px';
             th.insertAfter(dplh, _this.data);
             _this.data.class += ' dragging'; // console.log('drag start');
@@ -1423,8 +1447,8 @@ var script$2 = {
 };
 
 /* script */
-            const __vue_script__$2 = script$2;
-            
+const __vue_script__$2 = script$2;
+
 /* template */
 
   /* style */
@@ -1435,36 +1459,13 @@ var script$2 = {
   const __vue_module_identifier__$2 = undefined;
   /* functional template */
   const __vue_is_functional_template__$2 = undefined;
-  /* component normalizer */
-  function __vue_normalize__$2(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "DraggableTreeNode.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var DraggableTreeNode = __vue_normalize__$2(
+  var DraggableTreeNode = normalizeComponent_1(
     {},
     __vue_inject_styles__$2,
     __vue_script__$2,
@@ -1535,8 +1536,8 @@ var script$3 = {
 };
 
 /* script */
-            const __vue_script__$3 = script$3;
-            
+const __vue_script__$3 = script$3;
+
 /* template */
 
   /* style */
@@ -1547,36 +1548,13 @@ var script$3 = {
   const __vue_module_identifier__$3 = undefined;
   /* functional template */
   const __vue_is_functional_template__$3 = undefined;
-  /* component normalizer */
-  function __vue_normalize__$3(
-    template, style, script,
-    scope, functional, moduleIdentifier,
-    createInjector, createInjectorSSR
-  ) {
-    const component = (typeof script === 'function' ? script.options : script) || {};
-
-    // For security concerns, we use only base name in production mode.
-    component.__file = "DraggableTree.vue";
-
-    if (!component.render) {
-      component.render = template.render;
-      component.staticRenderFns = template.staticRenderFns;
-      component._compiled = true;
-
-      if (functional) component.functional = true;
-    }
-
-    component._scopeId = scope;
-
-    return component
-  }
   /* style inject */
   
   /* style inject SSR */
   
 
   
-  var DraggableTree = __vue_normalize__$3(
+  var DraggableTree = normalizeComponent_1(
     {},
     __vue_inject_styles__$3,
     __vue_script__$3,

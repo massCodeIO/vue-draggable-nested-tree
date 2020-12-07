@@ -74,7 +74,7 @@ export default {
     // pure node self
     pure(node, withChildren, after) {
       const t = Object.assign({}, node)
-      delete t._id
+      // delete t._id
       delete t.parent
       delete t.children
       delete t.active

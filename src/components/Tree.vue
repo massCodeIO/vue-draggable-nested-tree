@@ -84,11 +84,11 @@ export default {
       delete t.innerClass
       delete t.innerBackStyle
       delete t.innerBackClass
-      for (const key of Object.keys(t)) {
-        if (key[0] === '_') {
-          delete t[key]
-        }
-      }
+      // for (const key of Object.keys(t)) {
+      //   if (key[0] === '_') {
+      //     delete t[key]
+      //   }
+      // }
       if (withChildren && node.children) {
         t.children = node.children.slice()
         t.children.forEach((v, k) => {
